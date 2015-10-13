@@ -5,3 +5,25 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+User.destroy_all
+
+article = StiArticle.create!(user: User.create)
+
+item_creators = [
+  Proc.new { |n| StiVideo.create!(sti_article: article, url: "http://example.com/#{n}") },
+  Proc.new { |n| StiUrl.create!(sti_article: article, url: "http://example.com/#{n}") },
+  Proc.new { |n| StiVideo.create!(sti_article: article, url: "http://example.com/#{n}") }
+]
+
+10.times { |n| item_creators.sample.call(n) }
+
+article = PolymorphicArticle.create!(user: User.create)
+
+item_creators = [
+ Proc.new { |n| PolymorphicVideoItem.create!(polymorphic_article: article, url: "http://example.com/#{n}") },
+ Proc.new { |n| PolymorphicUrlItem.create!(polymorphic_article: article, url: "http://example.com/#{n}") },
+ Proc.new { |n| PolymorphicVideoItem.create!(polymorphic_article: article, url: "http://example.com/#{n}") }
+]
+
+10.times { |n| item_creators.sample.call(n) }

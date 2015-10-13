@@ -11,30 +11,73 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151013030706) do
+ActiveRecord::Schema.define(version: 20151013062727) do
 
-  create_table "sti_articles", force: :cascade do |t|
-    t.integer  "user_id"
+  create_table "polymorphic_article_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC" do |t|
+    t.integer  "polymorphic_article_id", limit: 4
+    t.integer  "polymorphic_item_id",    limit: 4
+    t.string   "polymorphic_item_type",  limit: 255
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+  end
+
+  add_index "polymorphic_article_items", ["polymorphic_article_id"], name: "index_polymorphic_article_items_on_polymorphic_article_id", using: :btree
+  add_index "polymorphic_article_items", ["polymorphic_item_type", "polymorphic_item_id"], name: "polyitem_type_id", using: :btree
+
+  create_table "polymorphic_articles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC" do |t|
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "polymorphic_articles", ["user_id"], name: "index_polymorphic_articles_on_user_id", using: :btree
+
+  create_table "polymorphic_text_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC" do |t|
+    t.text     "description", limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  create_table "polymorphic_url_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC" do |t|
+    t.string   "url",        limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "polymorphic_video_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC" do |t|
+    t.string   "url",        limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "sti_articles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC" do |t|
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "sti_articles", ["user_id"], name: "index_sti_articles_on_user_id", using: :btree
+
+  create_table "sti_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC" do |t|
+    t.integer  "sti_article_id", limit: 4
+    t.string   "type",           limit: 255,   null: false
+    t.text     "description",    limit: 65535
+    t.string   "url",            limit: 255
+    t.string   "label",          limit: 255
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "sti_items", ["sti_article_id", "url"], name: "index_sti_items_on_sti_article_id_and_url", unique: true, using: :btree
+  add_index "sti_items", ["sti_article_id"], name: "index_sti_items_on_sti_article_id", using: :btree
+
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC" do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_index "sti_articles", ["user_id"], name: "index_sti_articles_on_user_id"
-
-  create_table "sti_items", force: :cascade do |t|
-    t.integer  "sti_article_id"
-    t.text     "description"
-    t.string   "url"
-    t.string   "label"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-  end
-
-  add_index "sti_items", ["sti_article_id"], name: "index_sti_items_on_sti_article_id"
-
-  create_table "users", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
+  add_foreign_key "polymorphic_article_items", "polymorphic_articles"
+  add_foreign_key "polymorphic_articles", "users"
+  add_foreign_key "sti_articles", "users"
+  add_foreign_key "sti_items", "sti_articles"
 end
