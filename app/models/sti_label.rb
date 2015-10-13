@@ -1,2 +1,2 @@
-class STILabel < STIItem
+class StiLabel < StiItem
 end

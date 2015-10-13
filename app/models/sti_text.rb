@@ -1,2 +1,2 @@
-class STIText < STIItem
+class StiText < StiItem
 end
