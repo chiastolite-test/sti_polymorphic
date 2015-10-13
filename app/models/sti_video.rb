@@ -1,0 +1,2 @@
+class STIVideo < STIItem
+end

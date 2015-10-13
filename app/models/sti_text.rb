@@ -1,0 +1,2 @@
+class STIText < STIItem
+end

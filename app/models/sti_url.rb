@@ -1,0 +1,2 @@
+class STIUrl < STIItem
+end
