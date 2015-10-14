@@ -13,7 +13,7 @@ article = StiArticle.create!(user: User.create)
 item_creators = [
   Proc.new { |n| StiVideo.create!(sti_article: article, url: "http://example.com/#{n}") },
   Proc.new { |n| StiUrl.create!(sti_article: article, url: "http://example.com/#{n}") },
-  Proc.new { |n| StiVideo.create!(sti_article: article, url: "http://example.com/#{n}") }
+  Proc.new { |n| StiText.create!(sti_article: article, description: "Test #{n}") }
 ]
 
 10.times { |n| item_creators.sample.call(n) }
